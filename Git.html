@@ -287,7 +287,7 @@ nothing to commit, working tree clean
 <p>
 Изменим содержимое файла file3, добавив еще одну строку. И смотрим статус.
 <pre><code><font color="#461b7e">
-echo -ne "\nSecond line (v2)" >> file1
+$ echo -ne "\nSecond line (v2)" >> file1
 
 $ git status
 On branch master
@@ -350,27 +350,8 @@ nothing to commit, working tree clean
 </font></code></pre>
 И снова у нас «чистый директорий».
 </p><p>
-Откатим состояние рабочего каталога на один шаг назад
-<pre><code><font color="#461b7e">
-git checkout HEAD~1
-</font></code></pre>
-Вернем к последнему состоянию
-<pre><code><font color="#461b7e">
-git checkout master
-</font></code></pre>
-Откатим состояние рабочего каталога на два шага назад
-<pre><code><font color="#461b7e">
-git checkout HEAD~2
-</font></code></pre>
-Снова вернем к последнему состоянию
-<pre><code><font color="#461b7e">
-git checkout master
-</font></code></pre>
-</p><p>
 Мы получили представление как работаю основные команды git.
 Но чтобы полностью понять их работу и работу других команд git, надо знать внутреннее устройство репозитария.
-Его изучением и займемся.
-И начнем с <i>базы объектов</i> репозитория.
 </p>
 
 <h2>Внутреннее устройство git</h2>
@@ -949,8 +930,8 @@ $ git rev-parse master
 $ git cat-file -p 03c1
 tree 2763fac853abca428edd5c2a1b48ef5d212ff99a
 parent 69701b6e701d429882c083e98e1ecf195868b38c
-author Ivan Ivanov <ivan@localhost> 946677720 +0200
-committer Ivan Ivanov <ivan@localhost> 946677720 +0200
+author Ivan Ivanov &lt;ivan@localhost&gt; 946677720 +0200
+committer Ivan Ivanov &lt;ivan@localhost&gt; 946677720 +0200
 
 comment #2
 </font></code></pre>
@@ -965,18 +946,32 @@ comment #2
         |
         +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 </font></code></pre>
-</p><p>*******************************************************************************
+</p><p>
 Изменим содержимое файла file3, добавив еще одну строку
 <pre><code><font color="#461b7e">
-echo -ne "\nSecond line (v2)" >> file1
+$ echo -ne "\nSecond line (v2)" >> file1
 </font></code></pre>
 Подготовим для фиксации новую версию файла file1.
 <pre><code><font color="#461b7e">
 $ git add file1
+
+$ git ls-files --stage
+100644 b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f 0       d/file2
+100644 1d5260cb0591933230fdaaa8035a94b8e393ea20 0       file1 <font color="red"># поменялся идентификатор</font>
+100644 ad2a32f77c6c6eac140b94619e332c89d1319b6b 0       file3
+
+$ find .git/objects -type f
+.git/objects/03/c1a7f12800978dde0b8cd6383595e7007d0098
+.git/objects/1d/5260cb0591933230fdaaa8035a94b8e393ea20 <font color="red"># новый объект</font>
+.git/objects/27/63fac853abca428edd5c2a1b48ef5d212ff99a
+.git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
+.git/objects/69/701b6e701d429882c083e98e1ecf195868b38c
+.git/objects/6c/59b709d4abf607ab16a03b22db93412fe437a4
+.git/objects/96/6e9a46c8df9aa3b2108864be07abe7b5d1d0f9
+.git/objects/ad/2a32f77c6c6eac140b94619e332c89d1319b6b
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
 </font></code></pre>
-Замечание: Команда git add не только добавляет под версионный контроль новые файлы, но и помечаются измененные файлы, которые готовы для фиксации.
-</p><p>
-Что поменялось???????????????????
+Замечание: Когда команда <i>git add</i> выполняется с модифицированным файлом, она не добавляет, а изменяет уже имеющуюся запись в индексе.
 </p><p>
 Фиксируем новое состояние.
 <pre><code><font color="#461b7e">
@@ -989,36 +984,155 @@ $ git commit -m "comment #3"
  1 file changed, 2 insertions(+), 1 deletion(-)
 </font></code></pre>
 </p><p>
-Что поменялось???????????????????
-</p><p>
-Откатим состояние рабочего каталога на один шаг назад
+Что поменялось?
 <pre><code><font color="#461b7e">
-git checkout HEAD~1
+$ find .git/objects -type f
+.git/objects/03/c1a7f12800978dde0b8cd6383595e7007d0098
+.git/objects/1d/5260cb0591933230fdaaa8035a94b8e393ea20
+.git/objects/27/63fac853abca428edd5c2a1b48ef5d212ff99a
+.git/objects/34/4b36ba2aeb489f97a4928816eeeefb30ddfac2 <font color="red"># новый объект</font>
+.git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
+.git/objects/69/701b6e701d429882c083e98e1ecf195868b38c
+.git/objects/6c/59b709d4abf607ab16a03b22db93412fe437a4
+.git/objects/96/6e9a46c8df9aa3b2108864be07abe7b5d1d0f9
+.git/objects/ad/2a32f77c6c6eac140b94619e332c89d1319b6b
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+.git/objects/b8/92ad555729a5275bb9ba81158e2a708da84b11 <font color="red"># новый объект</font>
+
+$ git cat-file -t 03c1
+commit
+
+$ git cat-file -t b892
+tree
+
+$ git cat-file -p 03c1
+tree 2763fac853abca428edd5c2a1b48ef5d212ff99a
+parent 69701b6e701d429882c083e98e1ecf195868b38c
+author Ivan Ivanov &lt;ivan@localhost&gt; 946677720 +0200
+committer Ivan Ivanov &lt;ivan@localhost&gt; 946677720 +0200
+
+comment #2
+
+$ git cat-file -p b892
+040000 tree 966e9a46c8df9aa3b2108864be07abe7b5d1d0f9    d
+100644 blob 1d5260cb0591933230fdaaa8035a94b8e393ea20    file1
+100644 blob ad2a32f77c6c6eac140b94619e332c89d1319b6b    file3
 </font></code></pre>
+Появилось новое дерево и новый коммит.
 </p><p>
-Что поменялось???????????????????
+Вот новый снимок системы
+<pre><code><font color="#461b7e">
+b892 ---+--&gt; 1d52 (файл «file1» v2)
+        |
+        +--&gt; ad2a (файл «file3»)
+        |
+        +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+</font></code></pre>
+А так выгладит вся история нашего репозитория.
+<pre><code><font color="#461b7e">
+6970 (commit #1) --&gt; 6c59 ---+--&gt; 4751 (файл «file1»)
+|                            |
+|                            +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+↓
+03c1 (commit #2) --&gt; 2763 ---+--&gt; 4751 (файл «file1»)
+|                            |
+|                            +--&gt; ad2a (файл «file3»)
+|                            |
+|                            +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+↓
+344b (commit #3) --&gt; b892 ---+--&gt; 1d52 (файл «file1» v2)
+                             |
+                             +--&gt; ad2a (файл «file3»)
+                             |
+                             +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+</font></code></pre>
+</p>
+
+<h3>Восстановление предыдущих состояний рабочего каталога. Команда <i>git checkout</i></h3>
+
+<p>Таже история в обратной хронологической последовательности и без подробностей
+<pre><code><font color="#461b7e">
+$ git log --graph
+* commit 344b36ba2aeb489f97a4928816eeeefb30ddfac2 (HEAD -> master)
+| Author: Ivan Ivanov &lt;ivan@localhost&gt;
+| Date:   Sat Jan 1 00:03:00 2000 +0200
+|
+|     comment #3
+|
+* commit 03c1a7f12800978dde0b8cd6383595e7007d0098
+| Author: Ivan Ivanov &lt;ivan@localhost&gt;
+| Date:   Sat Jan 1 00:02:00 2000 +0200
+|
+|     comment #2
+|
+* commit 69701b6e701d429882c083e98e1ecf195868b38c
+  Author: Ivan Ivanov &lt;ivan@localhost&gt;
+  Date:   Sat Jan 1 00:01:00 2000 +0200
+
+      comment #1
+</font></code></pre>
+</p>
+Мы говорили что СКВ должны уметь восстанавливать историю.
+Как это сделать в git?
+<p>
 </p><p>
+Откатить состояние рабочего каталога на состояние соответствующее &lt;id-commit&gt; можно командой <i>git checkout &lt;id-commit&gt;</i>
+<pre><code><font color="#461b7e">
+$ git checkout 03c1
+Note: checking out '03c1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b &lt;new-branch-name&gt;
+
+HEAD is now at 03c1a7f comment #2
+</font></code></pre>
+Проверьте состояние рабочего каталога
+</p><p>
+Мы говорили, что файле <i>.git/HEAD</i> хранит имя текущего указателя, который ссылается на текущий коммит.
+Что там сейчас?
+<pre><code><font color="#461b7e">
+$ cat .git/HEAD
+03c1a7f12800978dde0b8cd6383595e7007d0098
+</font></code></pre>
+Там вместо имени текущего указателя там находится идентификатор текущего коммита, который мы назначили командой <i>git checkout</i>
+</p><p>
+Продвинемся ещё дольше в историю
+<pre><code><font color="#461b7e">
+$ git checkout 6970
+Previous HEAD position was 03c1a7f comment #2
+HEAD is now at 69701b6 comment #1
+</font></code></pre>
+Снова проверьте состояние рабочего каталога и содержимое <i>.git/HEAD</i>.
+<pre><code><font color="#461b7e">
+$ cat .git/HEAD
+69701b6e701d429882c083e98e1ecf195868b38c
+</font></code></pre>
 Вернем к последнему состоянию
 <pre><code><font color="#461b7e">
-git checkout master
+$ git checkout master
+Previous HEAD position was 69701b6 comment #1
+Switched to branch 'master'
+
+$ cat .git/HEAD
+ref: refs/heads/master
 </font></code></pre>
-</p><p>
-Что поменялось???????????????????
-</p><p>
-Откатим состояние рабочего каталога на два шага назад
-<pre><code><font color="#461b7e">
-git checkout HEAD~2
-</font></code></pre>
-</p><p>
-Что поменялось???????????????????
-</p><p>
-Снова вернем к последнему состоянию
-<pre><code><font color="#461b7e">
-git checkout master
-</font></code></pre>
-</p><p>
-Что поменялось???????????????????
+И снова у нас последнее сохраненное состояние,
+а в <i>.git/HEAD</i> указатель <i>master</i>
 </p>
+
+<h3>Создание новых ссылок. Команда <i>git branch</i></h3>
+
+<p>
+Но сих пор у нас существовал только один автоматически созданный указатель <i>master</i>.
+</p><p>
+</p>
+
 
 ********************************************************
 
