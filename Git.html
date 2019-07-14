@@ -367,6 +367,398 @@ git checkout master
 И начнем с <i>базы объектов</i> репозитория.
 </p>
 
+<h2>Внутреннее устройство git</h2>
+
+<p>
+Повторим наш пример почти один в один. Только теперь будем рассматривать какие именно изменения в репозитории вызывают  уже рассмотренные нами команды.
+</p>
+
+<h3>Создание нового репозитария. Команда <i>git init</i></h3>
+
+<p>
+Создадим у себя на компьютере новый репозиторий в папке <i>project1.0</i>.
+<pre><code><font color="#461b7e">
+$ mkdir ~/project1.0
+   
+$ cd ~/project1.0
+   
+$ git init
+Initialized empty Git repository in .git/
+
+$ git config user.name "Ivan Ivanov"
+$ git config user.email "ivan@localhost"
+</font></code></pre>
+Проверим какие файлы папки есть внутри каталога <i>.git</i>.
+</p><p>
+<pre><code><font color="#461b7e">
+$ ls -l .git
+total 7
+-rw-r--r-- 1 Konstantin 197121 181 июл 14 11:28 config
+-rw-r--r-- 1 Konstantin 197121  73 июл 14 11:28 description
+-rw-r--r-- 1 Konstantin 197121  23 июл 14 11:28 HEAD
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 info/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 objects/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 refs/
+</font></code></pre>
+Имеем три файла и четыре каталога.
+</p><p>
+Проверим наличие файлов внутри двух каталогов objects/ и refs/ или их подкаталогов.
+<pre><code><font color="#461b7e">
+$ find .git/objects -type f
+
+$ find .git/refs -type f
+</font></code></pre>
+Во в новом репозитории файлов в этих каталогах нет.
+</p><p>
+Добавим в каталог репозитория два файла
+<pre><code><font color="#461b7e">
+$ mkdir d
+
+$ echo -n "File1 v1" > file1
+
+$ echo -n "File2 v1" > d/file2
+</font></code></pre>
+Добавление файлов в рабочий каталог никак не отражается на состоянии каталога .git!
+</p>
+
+<h3>Команда <i>git add</i>. <i>Индекс</i>. Объекты типа <i>blob</i></h3>
+
+<p>
+Сделаем добавленные файлы отслеживаемыми. Начнем с файла d/file2.
+<pre><code><font color="#461b7e">
+$ git add d/file2
+</font></code></pre>
+Посмотрим как эта операция отразилась на состоянии каталога .git.
+</p><p>
+<pre><code><font color="#461b7e">
+$ ls -l .git
+total 8
+-rw-r--r-- 1 Konstantin 197121 181 июл 14 11:28 config
+-rw-r--r-- 1 Konstantin 197121  73 июл 14 11:28 description
+-rw-r--r-- 1 Konstantin 197121  23 июл 14 11:28 HEAD
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/
+-rw-r--r-- 1 Konstantin 197121 104 июл 14 12:39 index
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 info/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 12:39 objects/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 refs/
+</font></code></pre>
+В <i>.git</i> появился новый файл <i>index</i>.
+</p><p>
+<pre><code><font color="#461b7e">
+$ find .git/objects -type f
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+
+$ find .git/refs -type f
+</font></code></pre>
+В <i>.git/objects</i> появился новый каталог <i>d</i> с файлом <i>fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
+</p><p>
+Все файлы образующиеся в процессе работы в каталоге <i>.git/objects/</i> называются <i>объектами</i>, а сам каталог - <i>базой объектов</i>.
+<br>
+Идентификаторы всех объектов являются 40- разрядными шестнадцатиричными числами.
+<br>
+Имя подкаталога в котором сохраняется объект - это подстрока из первых дву символов идентификатора объекта.
+Имя файла - это подстрока из оставшихся 38 символов идентификатора.
+<br>
+Содержимое всех объектов, сжимается с помощью библиотеки zlib.
+Поэтому если заглянуть внутрь файла <i>b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>, то увидим мешанину символов.
+<pre><code><font color="#461b7e">
+$ cat .git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+xK▒▒OR▒`p▒▒I5R(3%Uq
+</font></code></pre>
+</p><p>
+Распакуем наш объект <i>b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i> утилитой <i>gzip</i>.
+<pre><code><font color="#461b7e">
+$ echo -en "\x1f\x8b\x08\x00\x00\x00\x00\x00" |cat - .git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f |gzip -dc
+blob 8File2 v1
+gzip: stdin: unexpected end of file
+</font></code></pre>
+Видим два поля:
+<br> - некий заголовок: «blob 8»
+<br> - и содержимое файла «d/file2»: «File2 v1».
+<br>Примечание:
+<br>1. слово «blob» тип объекта,
+<br>2. число 8 - длина содержимого файла,
+<br>3. идентификатор объекта - значение SHA-1 хеш-функции от его содержимого (до сжатия), в нашем случае от строки «blob 8\0File2 v1» (\0 - символ с нулевым код).
+<br> В последнем можно убедиться командой
+<pre><code><font color="#461b7e">
+$ echo -en 'blob 8\0File2 v1' | sha1sum
+b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f *-
+</font></code></pre>
+Есть git-команды позволяющие заглянуть внутрь объектов. 
+</p><p>
+Посмотрим тип объекта
+<pre><code><font color="#461b7e">
+$ git cat-file -t b2fb
+blob
+</font></code></pre>
+Посмотрим содержимое объекта типа «blob».
+<pre><code><font color="#461b7e">
+$ git cat-file blob b2fb
+File2 v1
+</font></code></pre>
+Рассмотрим второй файл появившейся в каталоге <i>.git</i> после выполнения команды <i>git add</i>
+<br>Непосредственный просмотр индекса утилитой <i>cat</i> также даёт мешанину символов (разве, что кроме имени файла)
+<pre><code><font color="#461b7e">
+$ cat .git/index
+▒▒&H]*▒4@ȫ▒]*▒4k▒X▒▒▒l▒B▒ʍ&#▒޴▒▒sI▒o/d/file2
+▒1▒        ▒
+</font></code></pre>
+В понятном виде, почти всю информацию хранящуюся в индексе, можно посмотреть так
+<pre><code><font color="#461b7e">
+$ git ls-files --stage
+100644 b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f 0       d/file2
+</font></code></pre>
+Видим группу из четырех полей:
+<br> - первое поле: атрибуты добавленного файла; первые три группы цифр (100) - тип файла, вторые три группы цифр - права доступа в unix-формате (далее будет более подробное объяснение);
+<br> - второе поле: идентификатор объекта, созданный на основе добавленного файла;
+<br> - третье поле: (всегда 0 ??????);
+<br> - последнее поле: добавленный командой <i>git add</i> файл, вместе с относительным путем до него.
+
+<pre><code><font color="#461b7e">
+040: Каталог (каталоги в индексе не хранятся!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+100: обычный файл
+120: Символическая ссылка (операционной систем????, не git системы!!!!!!!!!!)
+160: Gitlink (как он может попасть в рабочий каталог?????????????????)
+
+644: неисполняемый файл с правами на запись только владельцем файла
+664: неисполняемый файл с правами на запись владельцем файла и его группой
+755: исполняемый файл
+</font></code></pre>
+</p><p>
+Сделаем отслеживаемым ещё один созданный нами файл file1.
+<pre><code><font color="#461b7e">
+$ git add file1
+</font></code></pre>
+Посмотрим как эта операция отразилась на состоянии каталога .git.
+</p><p>
+<pre><code><font color="#461b7e">
+$ ls -l .git
+total 8
+-rw-r--r-- 1 Konstantin 197121 181 июл 14 11:28 config
+-rw-r--r-- 1 Konstantin 197121  73 июл 14 11:28 description
+-rw-r--r-- 1 Konstantin 197121  23 июл 14 11:28 HEAD
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/
+-rw-r--r-- 1 Konstantin 197121 176 июл 14 15:12 index <font color="red"># было: 104 июл 14 12:39</font>
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 info/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 15:12 objects/
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 refs/
+</font></code></pre>
+Изменился размер и время модификации файла <i>index</i>.
+<br>
+Новое содержимое индекса
+<pre><code><font color="#461b7e">
+$ git ls-files --stage
+100644 b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f 0       d/file2
+100644 475190118d49d9905c1a82c6fd11dab9ab602cc4 0       file1
+</font></code></pre>
+Добавилась строчка об ещё одном отслеживаемом файле.
+</p><p>
+А какие изменения в базе объектов?
+<pre><code><font color="#461b7e">
+$ find .git/objects -type f
+.git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4 <font color="red"># новый объект</font>
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+</font></code></pre>
+В <i>.git/objects</i> появился новый объект <i>475190118d49d9905c1a82c6fd11dab9ab602cc4</i>.
+</p><p>
+</p>
+
+<h3>***********************************************Фиксация состояний репозитория. Команда <i>git commit</i></h3>
+
+<p>
+Все состояния репозитория которые мы хотим иметь возможность восстановить в будущем подлежат <i>фиксации</i>.
+Фиксация выполняется одноименной командой <i>git commit</i>.
+</p><p>
+Зафиксируем состояние нашего репозитория, но перед этим установим значение двух переменных окружения GIT_AUTHOR_DATE и GIT_COMMITTER_DATE. В учебных примерах мы это будем делать всякий раз, перед выполнением операции <i>git commit</i>.
+Это необходимо, чтобы идентификаторы commit и tree объектов, создаваемые командой <i>git commit</i> и зависящие от времени, у всех, кто будет повторять эти примеры, были такими же как у меня. Об объектах и их идентификаторах немного делее.
+<br>
+В реальной работе этого разумеется делать не надо. Команда <i>git commit</i> будет использовать текущие дату и время.
+<pre><code><font color="#461b7e">
+$ export GIT_AUTHOR_DATE="2000-01-01 00:01"
+
+$ export GIT_COMMITTER_DATE="2000-01-01 00:01"
+
+$ git commit -m "comment #1"
+[master (root-commit) 69701b6] comment #1
+ 2 files changed, 2 insertions(+)
+ create mode 100644 d/file2
+ create mode 100644 file1
+</font></code></pre>
+Примечание: Если вместо числа 69701b6, в выводе команды, вы видите другое число, то это значит, что вы неправильно установили переменные окружения, о которых только что говорилось, либо установили не то имя или почтовый адрес (не Ivan Ivanov &lt;ivan@localhost&gt;).
+</p><p>
+Посмотрим что выдает команды <i>git log</i>.
+<pre><code><font color="#461b7e">
+$ git log
+commit 69701b6e701d429882c083e98e1ecf195868b38c (HEAD -> master)
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:01:00 2000 +0200
+
+    comment #1
+</font></code></pre>
+Из вывода команды видно кто и когда зафиксировал новое состояние, и какое сообщение (комментарий) оставил для тех, кто позднее будет разбираться с историей репозитория.
+В реальной работе надо конечно оставлять более информативные сообщения.
+</p>
+<p>
+Посмотрим что выдает команда<i>git status</i>.
+<pre><code><font color="#461b7e">
+$ git status
+On branch master
+nothing to commit, working tree clean
+</font></code></pre>
+Снова видим что «фиксировать нечего (nothing to commit)»
+и что «рабочий каталог чист (working tree clean)»
+</p><p>
+Создадим в рабочем каталоге еще один файл
+<pre><code><font color="#461b7e">
+$ echo -n "File3 v1" > file3
+
+$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        file3
+
+nothing added to commit but untracked files present (use "git add" to track)
+</font></code></pre>
+</p>
+<p>
+Под заголовком «Untracked files:» команда вывела добавленный нами файл file3. Он пока неотслеживаемый. Если попробовать зафиксировать новое состояние репозитория, то ничего не произойдет.
+<pre><code><font color="#461b7e">
+$ git commit -m "comment #2"
+On branch master
+Untracked files:
+        file3
+
+nothing added to commit but untracked files present
+</font></code></pre>
+</p>
+<p>
+Сделаем файл file3 отслеживаемым и посмотрим на новый статус репозитория
+<pre><code><font color="#461b7e">
+$ git add file3
+
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        new file:   file3
+</font></code></pre>
+Команда вывела файл file3 уже под заголовком «Changes to be committed:». Сейчас файл file3 подготовлен (stage) для фиксации.
+</p><p>
+Выполним фиксацию и снова посмотрим статус
+<pre><code><font color="#461b7e">
+$ git commit -m "comment #2"
+[master 03c1a7f] comment #2
+ 1 file changed, 1 insertion(+)
+ create mode 100644 file3
+
+$ git log
+commit 03c1a7f12800978dde0b8cd6383595e7007d0098 (HEAD -> master)
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:02:00 2000 +0200
+
+    comment #2
+
+commit 69701b6e701d429882c083e98e1ecf195868b38c
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:01:00 2000 +0200
+
+    comment #1
+
+$ git status
+On branch master
+nothing to commit, working tree clean
+</font></code></pre>
+У нас «чистый» репозиторий с двумя зафиксированными изменениями.
+</p>
+<p>
+<p>
+Изменим содержимое файла file3, добавив еще одну строку. И смотрим статус.
+<pre><code><font color="#461b7e">
+echo -ne "\nSecond line (v2)" >> file1
+
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   file1
+
+no changes added to commit (use "git add" and/or "git commit -a")
+</font></code></pre>
+Файл file1 выведен уже под заголовком «Changes not staged for commit:». Он модифицирован (Modified). Модифицированные файла, как и новые, перед фиксацией тоже надо подготовить.
+</p><p>
+Подготовим для фиксации новую версию файла file1.
+<pre><code><font color="#461b7e">
+$ git add file1
+
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   file1
+</font></code></pre>
+Замечание: Команда git add не только добавляет под версионный контроль новые файлы, но и помечаются измененные файлы, которые готовы для фиксации.
+<br>
+Подготовка выполнена. Можно фиксировать новое состояние.
+<pre><code><font color="#461b7e">
+$ export GIT_AUTHOR_DATE="2000-01-01 00:03"
+
+$ export GIT_COMMITTER_DATE="2000-01-01 00:03"
+
+$ git commit -m "comment #3"
+[master 344b36b] comment #3
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+$ git log
+commit 344b36ba2aeb489f97a4928816eeeefb30ddfac2 (HEAD -> master)
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:03:00 2000 +0200
+
+    comment #3
+
+commit 03c1a7f12800978dde0b8cd6383595e7007d0098
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:02:00 2000 +0200
+
+    comment #2
+
+commit 69701b6e701d429882c083e98e1ecf195868b38c
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:01:00 2000 +0200
+
+    comment #1
+
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+</font></code></pre>
+И снова у нас «чистый директорий».
+</p><p>
+Откатим состояние рабочего каталога на один шаг назад
+<pre><code><font color="#461b7e">
+git checkout HEAD~1
+</font></code></pre>
+Вернем к последнему состоянию
+<pre><code><font color="#461b7e">
+git checkout master
+</font></code></pre>
+Откатим состояние рабочего каталога на два шага назад
+<pre><code><font color="#461b7e">
+git checkout HEAD~2
+</font></code></pre>
+Снова вернем к последнему состоянию
+<pre><code><font color="#461b7e">
+git checkout master
+</font></code></pre>
+</p>
+
 <h3>База объектов репозитария</h3>
 
 <p>
@@ -812,15 +1204,14 @@ $ git hist
 </p>
 
 <p>
-Команда <i>git add &lt;файл&gt;</i> сохраняет в индексе имя файла вместе с относительным путем к этому файлу файлам.
-Кроме этого в индексе сохраняется информация о типе файла (0 - обычный файл, какие еще возможны типы?), его UNIX правах доступа и идентификаторе блоб-объекта соответствующего этому файлу. (Также время создания/модификации, но это не попадает в коммит. Только для более быстрого сравнивания?????????)
+Команда <i>git add &lt;файл&gt;</i> сохраняет в индексе информацию об атрибутах файла (типе файла и  правах доступа), идентификаторе блоб-объекта соответствующего этому файлу, имя файла вместе с относительным путем к этому файлу. (Также время создания/модификации, но это не попадает в коммит. Только для более быстрого сравнивания?????????)
 </p><p>
 Содержимое индекса можно посмотреть командой git ls-files. Посмотрим, что у нас там сейчас находится: 
 <pre><code><font color="#461b7e">    $ git ls-files --stage
     100644 b45ef6fec89518d314f546fd6c3025367b721684 0       tutorial.txt
 
 </font></code></pre>
-Из вывода команды видно, что в индексе присутствует единственный файл с именем tutorial.txt с правами доступа 100644, и, что это обычный файл (код 0), и что содержимое этого файла можно извлечь из blob-объекта с идентификатором b45ef6fec89518d314f546fd6c3025367b721684.
+Из вывода команды видно, что в индексе присутствует единственный файл с именем tutorial.txt с атрибутами 100644 и что содержимое этого файла можно извлечь из blob-объекта с идентификатором b45ef6fec89518d314f546fd6c3025367b721684.
 </p>
 
 <p>
