@@ -1264,7 +1264,15 @@ $ git config user.name "Ivan Ivanov"
 $ git config user.email "ivan@localhost"
 
 $ nano dev.py
+</font></code></pre>
 
+<pre><code><font color=blue>
+x = 6
+y = 2
+print("x/y=",x/y)
+</font></code></pre>
+
+<pre><code><font color="#461b7e">
 $ git add .
 
 $ git commit -m "v1"
@@ -1272,16 +1280,81 @@ $ git commit -m "v1"
  1 file changed, 3 insertions(+)
  create mode 100644 dev.py
 
+D:\Git\project2>python dev.py
+x/y= 3
+</font></code></pre>
+Пишем вторую версию программы
+<pre><code><font color="#461b7e">
+$ nano dev.py
+</font></code></pre>
 
+<pre><code><font color=blue>
+x = int(input("x="))
+y = int(input("y="))
+print("x/y=",x/y)
+print("Спасибо за использование нашей программы!")
+</font></code></pre>
+
+<pre><code><font color="#461b7e">
+$ git add .
+
+$ git commit -m "v2"
+[master (root-commit) afb5303] v1
+ 1 file changed, 3 insertions(+)
+ create mode 100644 dev.py
 
 D:\Git\project2>python dev.py
 x=9
 y=2
 x/y= 4.5
 </font></code></pre>
-</p>
-<p>
+Получаем задание «улучшить» интерфейс.
+Выполнять это задание будем в новой ветке «testing».
+<pre><code><font color="#461b7e">
+$ git branch testing
 
+$ git checkout testing
+
+$ nano dev.py
+</font></code></pre>
+
+<pre><code><font color=blue>
+x = int(input("x="))
+y = int(input("y="))
+print("x/y=",x/y)
+print("Спасибо за использование нашей программы!")
+# работаем ....
+# ещё работаем ....
+# и снова работаем ....
+</font></code></pre>
+Но тут обнаружился "баг" в нашей программе.
+При делении на ноль наша программа некорректно завершает работу с выдачей непонятного для пользователя сообщения.
+</p><p>
+Получаем новое задание: отложить все дела и срочно устранить "баг".
+</p><p>
+<pre><code><font color="#461b7e">
+$ git add .
+
+$ git commit -m "незавершенная версия с улучшенным интерфейсом"
+
+$ git checkout master
+
+$ git branch hotfix
+
+$ git checkout hotfix
+
+$ nano dev.py
+</font></code></pre>
+
+<pre><code><font color=blue>
+x = int(input("x="))
+y = int(input("y="))
+if = 0:
+	print("x/y=",x/y)
+else:
+	print("Извините, но делить на ноль нельзя")
+print("Спасибо за использование нашей программы!")
+</font></code></pre>
 </p>
 <p>
 
