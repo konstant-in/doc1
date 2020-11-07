@@ -371,7 +371,7 @@ nothing to commit, working tree clean
 
     <p>Смотрим историю комментов нашего репозитория</p>
 
-    <pre><code style="color: blue">
+<pre><code style="color: blue">
 $ git log
 commit 344b36ba2aeb489f97a4928816eeeefb30ddfac2 (HEAD -> master)
 Author: Ivan Ivanov &lt;ivan@localhost&gt;
@@ -391,6 +391,21 @@ Date:   Sat Jan 1 00:01:00 2000 +0200
 
     comment #1
 
+</code></pre>
+
+    <p>Алиасы ...</p>
+
+<pre><code style="color: blue">
+    git config --global alias.hist "log --pretty=format:'%h %ad - %s%d [%an]' --graph --date=format:'%Y-%m-%d %H:%M %z'"
+</code></pre>
+
+    <p>После этого ...</p>
+
+<pre><code style="color: blue">
+$ git hist --all
+* 344b36b 2000-01-01 00:03 +0200 - comment #3 (HEAD -> master) [Ivan Ivanov]
+* 03c1a7f 2000-01-01 00:02 +0200 - comment #2 [Ivan Ivanov]
+* 69701b6 2000-01-01 00:01 +0200 - comment #1 [Ivan Ivanov]
 </code></pre>
 
     <p>Откатимся на состояние зафиксированное коммитом с <i>id</i> равным <i>03c1a7f12800978dde0b8cd6383595e7007d0098</i> (comment #2).</p>
