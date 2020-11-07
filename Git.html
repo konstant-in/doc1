@@ -84,12 +84,13 @@ Git хранит историю не всех файлов рабочего ка
 </p><p>
 Создадим у себя на компьютере пустую папку и инициализируем в ней репозиторий.<br>
 Репозиторий инициализируется командой <i>git init</i>.</p>
+    <p>У команды есть необязательный парамерт <i>-b</i> указавающий имя <i>начальной ветки</i> (о ветках смотри раздел «О ветвлении и ветках»).</p>
 <pre><code style="color: blue">
 $ mkdir ~/project1
    
 $ cd ~/project1
    
-$ git init
+$ git init -b master
 Initialized empty Git repository in .git/
 </code></pre>
 Новый репозиторий создан.
@@ -164,11 +165,16 @@ Changes to be committed:
 <p>
 Все состояния репозитория которые мы хотим иметь возможность восстановить в будущем подлежат <i>фиксации</i>.
 Фиксация выполняется командой <i>git commit</i>.
+</p><p>В учебных примерах мы всякий раз, перед выполнением команды <i>git commit</i>,
+    будем установать определенную дату и время в двух переменных окружения GIT_AUTHOR_DATE и GIT_COMMITTER_DATE.
+Это необходимо, чтобы идентификаторы commit и tree объектов (<i>&lt;id-commit&gt;</i> и <i>&lt;id-tree&gt;</i>), создаваемые командой <i>git commit</i>,
+    у всех, кто будет повторять эти примеры, были такими же как у меня.
+    Если это не сделать, то команда будет использовать текущие дату и время, и идентефикаторы объектов у вас будут другие.
+    <br>Подробно об объектах и их идентификаторах поговорим в разделе «Внутреннее устройство git».
 </p><p>
-Зафиксируем состояние нашего репозитория, но перед этим установим значение двух переменных окружения GIT_AUTHOR_DATE и GIT_COMMITTER_DATE. В учебных примерах мы это будем делать всякий раз, перед выполнением операции <i>git commit</i>.
-Это необходимо, чтобы идентификаторы commit и tree объектов, создаваемые командой <i>git commit</i> и зависящие от времени, у всех, кто будет повторять эти примеры, были такими же как у меня. Об объектах и их идентификаторах немного делее.
-<br>
-В реальной работе этого разумеется делать не надо. Команда <i>git commit</i> будет использовать текущие дату и время.
+В реальной работе, разумеется, переменные окружения GIT_AUTHOR_DATE и GIT_COMMITTER_DATE установливать не надо;
+    команда <i>git commit</i> будет использовать текущие дату и время.</p>
+    <p>Зафиксируем состояние нашего репозитория.</p>
 <pre><code style="color: blue">
 $ export GIT_AUTHOR_DATE="2000-01-01 00:01"
 
@@ -180,9 +186,11 @@ $ git commit -m "comment #1"
  create mode 100644 d/file2
  create mode 100644 file1
 </code></pre>
-Примечание: Если вместо числа 69701b6, в выводе команды, вы видите другое число, то это значит, что вы неправильно установили переменные окружения, о которых только что говорилось, либо установили не то имя или почтовый адрес (не Ivan Ivanov &lt;ivan@localhost&gt;).
-    <p>
-Посмотрим что выдает команды <i>git log</i>.
+    <p>После опции <i>-m</i> в команде необходимо оставлять сообщение об изменениях зафиксированных этим коммитом.
+        В реальной работе надо конечно оставлять более информативные сообщения чем в наших примерах.</p>
+    <p>Число <i>69701b6</i>, в первой строке выведенной командой, показывает первые семь цифр <i>&lt;id-commit&gt;</i>.
+    <br>Полный &lt;id-commit&gt;, а также кто и когда зафиксировал новое состояние,
+        и какое сообщение (комментарий) он оставил, можно посмотреть в <i>истории коммитов</i>, командой <i>git log</i>.</p>
 <pre><code style="color: blue">
 $ git log
 commit 69701b6e701d429882c083e98e1ecf195868b38c (HEAD -> master)
@@ -191,11 +199,13 @@ Date:   Sat Jan 1 00:01:00 2000 +0200
 
     comment #1
 </code></pre>
-    Из вывода команды видно кто и когда зафиксировал новое состояние, и какое сообщение (комментарий) оставил для тех,
-    кто позднее будет разбираться с историей репозитория.
-    В реальной работе надо конечно оставлять более информативные сообщения.
-    <p>
-Посмотрим что выдает команда<i>git status</i>.
+    <p>Примечание: Если вместо 69701b6e701d429882c083e98e1ecf195868b38c,
+        вы видите другой <i>&lt;id-commit&gt;</i>, то это значит, что вы не установили (или неправильно установили) переменные окружения
+        GIT_AUTHOR_DATE или GIT_COMMITTER_DATE,
+        либо имя отличное от «Ivan Ivanov»,
+        либо почтовый адрес отличный от «ivan@localhost»,
+        либо комментарий отличный от «comment #1».</p>
+    <p>Посмотрим текущее состояние репозитория.</p>
 <pre><code style="color: blue">
 $ git status
 On branch master
@@ -240,8 +250,7 @@ Changes to be committed:
         new file:   file3
 </code></pre>
 Команда вывела файл file3 уже под заголовком «Changes to be committed:». Сейчас файл file3 подготовлен (stage) для фиксации.
-    <p>
-Выполним фиксацию и снова посмотрим статус
+    <p>Выполним фиксацию
 <pre><code style="color: blue">
 $ export GIT_AUTHOR_DATE="2000-01-01 00:02"
 
@@ -252,6 +261,9 @@ $ git commit -m "comment #2"
  1 file changed, 1 insertion(+)
  create mode 100644 file3
 
+</code></pre>
+    <p>и снова посмотрим историю.
+    <pre><code style="color: blue">
 $ git log
 commit 03c1a7f12800978dde0b8cd6383595e7007d0098 (HEAD -> master)
 Author: Ivan Ivanov &lt;ivan@localhost&gt;
@@ -269,8 +281,8 @@ $ git status
 On branch master
 nothing to commit, working tree clean
 </code></pre>
-    У нас «чистый» репозиторий с двумя зафиксированными изменениями.
-    <p>
+    <p>У нас «чистый» репозиторий с двумя зафиксированными изменениями.</p>
+
 <p>
 Изменим содержимое файла file3, добавив еще одну строку. И смотрим статус.
 <pre><code style="color: blue">
@@ -311,6 +323,11 @@ $ git commit -m "comment #3"
 [master 344b36b] comment #3
  1 file changed, 2 insertions(+), 1 deletion(-)
 
+</code></pre>
+
+    <p>Смотрим историю комментов</p>
+
+    <pre><code style="color: blue">
 $ git log
 commit 344b36ba2aeb489f97a4928816eeeefb30ddfac2 (HEAD -> master)
 Author: Ivan Ivanov &lt;ivan@localhost&gt;
@@ -330,18 +347,82 @@ Date:   Sat Jan 1 00:01:00 2000 +0200
 
     comment #1
 
+</code></pre>
+
+    <p>и статус файлов.</p>
+
+    <pre><code style="color: blue">
 $ git status
 On branch master
 nothing to commit, working tree clean
 
 </code></pre>
-И снова у нас «чистый директорий».
-    <p>
-Мы получили представление как работаю основные команды git.
-Но чтобы полностью понять их работу и работу других команд git, надо знать внутреннее устройство репозитария.
-</p>
 
-<h2>Внутреннее устройство git</h2>
+    <p>И снова у нас «чистый директорий».</p>
+
+    <h3>Восстановление предыдущих состояний рабочего каталога. Команда <i>git checkout</i></h3>
+
+    <p>
+        Мы говорили что любая СКВ должны уметь восстанавливать сохраненные состояния рабочего каталога.
+        Как это сделать в git?
+    <br>
+    Откатить состояние рабочего каталога на состояние соответствующее &lt;id-commit&gt; можно командой <i>git checkout &lt;id-commit&gt;</i>
+
+    <p>Смотрим историю комментов нашего репозитория</p>
+
+    <pre><code style="color: blue">
+$ git log
+commit 344b36ba2aeb489f97a4928816eeeefb30ddfac2 (HEAD -> master)
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:03:00 2000 +0200
+
+    comment #3
+
+commit 03c1a7f12800978dde0b8cd6383595e7007d0098
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:02:00 2000 +0200
+
+    comment #2
+
+commit 69701b6e701d429882c083e98e1ecf195868b38c
+Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Date:   Sat Jan 1 00:01:00 2000 +0200
+
+    comment #1
+
+</code></pre>
+
+    <p>Откатимся на состояние зафиксированное коммитом с <i>id</i> равным <i>03c1a7f12800978dde0b8cd6383595e7007d0098</i></p>
+
+    <pre><code style="color: blue">
+$ git checkout 03c1
+Note: checking out '03c1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b &lt;new-branch-name&gt;
+
+HEAD is now at 03c1a7f comment #2
+</code></pre>
+    <p>Проверьте состояние рабочего каталога. [проверить содеримое каталогов и файлов...]</p>
+
+    <p>Вернемся на состояние зафиксированное последним коммитом (с <i>id</i> равным <i>344b36ba2aeb489f97a4928816eeeefb30ddfac2</i>)</p>
+<pre><code style="color: blue">
+$ git checkout 344b
+Previous HEAD position was 03c1a7f comment #2
+HEAD is now at 344b36b comment #3
+
+</code></pre>
+
+    <h2>Внутреннее устройство git</h2>
+
+    <p>Мы получили представление как работаю основные команды git.
+        Но чтобы полностью понять их работу и работу других команд git, надо знать внутреннее устройство репозитария.</p>
 
 <p>
 Повторим наш пример почти один в один. Только теперь будем рассматривать какие именно изменения в репозитории вызывают  уже рассмотренные нами команды.
@@ -356,7 +437,7 @@ $ mkdir ~/project1.0
    
 $ cd ~/project1.0
    
-$ git init
+$ git init -b master
 Initialized empty Git repository in .git/
 
 $ git config user.name "Ivan Ivanov"
@@ -1052,13 +1133,10 @@ $ git log --graph
       comment #1
 </code></pre>
 
-    <h3>Восстановление предыдущих состояний рабочего каталога. Команда <i>git checkout</i></h3>
+    <h3>Как работает команда <i>git checkout</i></h3>
 
 <p>
-Мы говорили что СКВ должны уметь восстанавливать историю.
-Как это сделать в git?
-</p><p>
-Откатить состояние рабочего каталога на состояние соответствующее &lt;id-commit&gt; можно командой <i>git checkout &lt;id-commit&gt;</i>
+Мы уже говорили что откатить состояние рабочего каталога на состояние соответствующее &lt;id-commit&gt; можно командой <i>git checkout &lt;id-commit&gt;</i>
 <pre><code style="color: blue">
 $ git checkout 03c1
 Note: checking out '03c1'.
@@ -1109,8 +1187,8 @@ ref: refs/heads/master
 
     <h3>О ветвлении и ветках</h3>
 
-<p>
-Работая над проектом вам может потребоваться отклониться от основной линии разработки и продолжить работу независимо от нее, не вмешиваясь в основную линию.
+    <p>При создании репозитория мы указывали имя начальной ветки (или оно было выбрано по умолчанию: main или master).</p>
+    <p>Работая над проектом вам может потребоваться отклониться от основной линии разработки и продолжить работу независимо от нее, не вмешиваясь в основную линию.
 По завершении такой работа, как правило, нужно перенести наработки в основную линию.
 Такие действия, при работе с проектом, называются <i>ветвлением</i> <i>и слиянием</i>.
 Ветвление в любой СКВ можно организовать путем копирования всего проекта.
@@ -1230,7 +1308,7 @@ $ mkdir ~/project2
    
 $ cd ~/project2
    
-$ git init
+$ git init -b master
 Initialized empty Git repository in .git/
 
 $ git config user.name "Ivan Ivanov"
