@@ -74,16 +74,13 @@ Ivan Ivanov
 </code></pre>
 
         <h3>Создание нового репозитария</h3>
-        <p>Каталог, файлы которого отслеживает git, называтся <i>рабочим каталогом</i>.
+        <p>
+            Каталог, файлы которого отслеживает git, называтся <i>рабочим каталогом</i> Git (work tree).
+            Любой каталог можно превратить в рабочий выполнив в нем команду инициализации репозитория.
         </p>
         <p>
-            Любой каталог можно превратить в <i>рабочий каталог Git (work tree)</i> выполнив в нем команду инициализации репозитория.
-        </p>
-
-        <p>
-            Создадим у себя на компьютере пустую папку и инициализируем в ней репозиторий.<br>
-        </p>
-        <p>Репозиторий инициализируется командой <i>git init</i>. У неё есть необязательный параметр <i>-b</i> указывающий имя <i>начальной ветки</i>
+            Создадим у себя на компьютере пустую папку и инициализируем в ней репозиторий.
+            Репозиторий инициализируется командой <i>git init</i>. У команды есть необязательный параметр <i>-b</i> указывающий имя <i>начальной ветки</i>
             (о ветках смотри раздел «О ветвлении и ветках»).</p>
         <pre><code style="color: blue">
 $ mkdir ~/project1
@@ -94,16 +91,11 @@ $ git init -b master
 Initialized empty Git repository in .git/
 </code></pre>
         
-        
-        
-        
-        
-        
-        
-        
         <p>
-            Новый репозиторий создан. Команда инициализации создает внутри рабочего каталога подкаталог <i>.git/</i>, который и является репозиторием СКВ Git.
-            В нем будет храниться история всех изменений, кототорые мы желаем сохранить.
+            Мы создали новый репозиторий присвоив начальной ветке имя <i>master</i>.
+            <br>
+            Команда инициализации создала внутри рабочего каталога подкаталог <i>.git/</i>, который и является репозиторием СКВ Git.
+            В нем будет храниться история всех изменений, кототорые мы желаем отслеживать.
         </p>
         <p>
             Посмотрим что находится в этом каталоге.
@@ -111,23 +103,24 @@ Initialized empty Git repository in .git/
         <pre><code style="color: blue">
 $ ls -l .git
 total 7
--rw-r--r-- 1 Konstantin 197121 181 июл 14 11:28 config
--rw-r--r-- 1 Konstantin 197121  73 июл 14 11:28 description
--rw-r--r-- 1 Konstantin 197121  23 июл 14 11:28 HEAD
-drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/
-drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 info/
-drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 objects/
-drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 refs/
+-rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
+-rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
+-rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 objects/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
 </code></pre>
+
         <p>
             В новом репозитории видим 3 файла и 4 пустых подкаталога.
         </p>
         
 
-        <h3>Состояние репозитория. Команда <i>git status</i></h3>
+        <h3>Команда <i>git status</i></h3>
 
         <p>
-            Посмотреть состояние репозитория можно командой <i>git status</i>
+            Для просмотра статуса рабочего каталога служит команда <i>git status</i>.
         </p>
         <pre><code style="color: blue">
 $ git status
@@ -145,7 +138,27 @@ $ mkdir d
 
 $ echo -n "File2 v1" > d/file2
 </code></pre>
-        Посмотрим как изменилось состояние репозитория.
+
+        <p>
+            Наш репозиторий никак не изменился.
+        </p>
+
+        <pre><code style="color: blue">
+$ ls -l .git
+total 7
+-rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
+-rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
+-rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 objects/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
+</code></pre>
+        
+        <p>
+            А какое сообщение теперь выдает каманда <i>git status</i>?
+        </p>
+            
         <pre><code style="color: blue">
 $ git status
 On branch master
@@ -160,7 +173,10 @@ Untracked files:
 
 nothing added to commit but untracked files present (use "git add" to track)
 </code></pre>
-        Команда <i>git status</i> сообщает нам, что у нас появились два неотслеживаемых файла
+        
+        <p>
+            Команда <i>git status</i> сообщает нам, что у нас появились два неотслеживаемых файла
+        </p>
 
         <h3>Команда <i>git add</i></h3>
 
@@ -168,10 +184,18 @@ nothing added to commit but untracked files present (use "git add" to track)
             Git хранит историю не всех файлов рабочего каталога.
             Чтобы начать хранить историю версий какого-либо файла надо отдать его под версионный контроль.
             Файлы отданные под версионный контроль называются <i>отслеживаемыми</i>.
-            Чтобы отдать файл или группу файлов под версионный контроль, т.е. сделать их отслеживаемыми, надо выполнить команду <i>git add</i>, передав ей в качестве параметров эти файлы.
+            Чтобы сделать файл или группу файлов отслеживаемыми, надо выполнить команду <i>git add</i>, передав ей в качестве параметров имена этих файлов.
+        </p>
+            
         <pre><code style="color: #0000ff">
-$ git add .
+$ git add git add file1 d/file2
+</code></pre>
 
+        <p>
+            С этого момента два добавленных файла стали отслеживаемыми.
+        </p>
+
+        <pre><code style="color: #0000ff">
 $ git status
 On branch master
 
@@ -183,9 +207,76 @@ Changes to be committed:
         new file:   d/file2
         new file:   file1
 </code></pre>
-        С этого момента эти файлы стали отслеживаемыми.
-        Теперь мы можем зафиксировать новое состояние репозитория.
+        
+        
+        <p>        
+            Посмотрим как операция <i>git add</i> отразилась на файлах репозитория <i>.git</i>.
+        </p>
+        
+        <pre><code style="color: blue">
+$ ls -l .git
+total 8
+-rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
+-rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
+-rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
+-rw-r--r-- 1 Konstantin 197121 176 Nov  9 20:53 index
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 20:53 objects/
+drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
+</code></pre>
+        <p>
+            В каталоге <i>.git</i> команда  <i>git add</i> создала файл <i>index</i>, а в  каталоге <i>.git/objects</i> - подкаталоги с файлами.
+        </p>
+            
+        <pre><code style="color: blue">
+$ find .git/objects -type f
+.git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+</code></pre>
 
+        <p>
+            В каталоге <i>.git/objects</i> созданы
+            <br>
+            каталог <i>47</i> с файлом <i>5190118d49d9905c1a82c6fd11dab9ab602cc4</i>
+            <br>
+            и
+            <br>
+            каталог <i>b2</i> с файлом <i>fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
+        </p>
+            
+        <p>
+            Все файлы образующиеся в процессе работы в каталоге <i>.git/objects/</i> называются <i>объектами</i>, а сам каталог - <i>базой объектов</i>.
+            <br>
+            Все объекты имеют идентификаторы являющиеся 40- разрядными шестнадцатиричными числами.
+            <br>
+            Имя подкаталога в котором сохраняется объект образовано первыми двуми символов идентификатора объекта.
+            Имя файла образовано оставшихся 38 символами идентификатора.
+        </p>
+        
+        <p>
+            Т.о. в каталоге <i>.git/objects/</i> каманда <i>git add</i> создала два объекта с идентификаторами <i>475190118d49d9905c1a82c6fd11dab9ab602cc4</i> и <i>b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
+        </p>
+        <p>
+            В объектах, создаваемых камандой <i>git add</i>, хранятся в упакованном виде ...
+        </p>
+        
+        <pre><code style="color: blue">
+$ git cat-file -t 4751
+blob
+
+$ git cat-file -t b2fb
+blob
+
+$ git cat-file -p 4751
+File1 v1
+
+$ git cat-file -p b2fb
+File2 v1
+</code></pre>
+        
+        
+        
         <h3>Фиксация состояний репозитория. Команда <i>git commit</i></h3>
 
         <p>
