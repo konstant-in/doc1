@@ -102,20 +102,28 @@ Initialized empty Git repository in .git/
         </p>
         <pre><code style="color: blue">
 $ ls -l .git
-total 7
--rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
--rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
--rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 objects/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
+total 0
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
+-rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
+-rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
+-rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 objects/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
 </code></pre>
 
         <p>
-            В новом репозитории видим 3 файла и 4 пустых подкаталога.
+            В новом репозитории видим 3 файла и 4 подкаталога.
         </p>
-        
+
+        <pre><code style="color: blue">
+$ find .git/objects -type f
+</code></pre>
+
+        <p>
+            В каталоге <i>.git/objects</i> файлов нет.
+        </p>
 
         <h3>Команда <i>git status</i></h3>
 
@@ -140,19 +148,38 @@ $ echo -n "File2 v1" > d/file2
 </code></pre>
 
         <p>
+            Посмотрим список файлов в рабочем каталоге.
+        </p>
+        
+        
+        <pre><code style="color: blue">
+$ ls -lR
+.:
+total 0
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:31 d/
+-rwxrwxrwx 1 konstantin konstantin   8 2020-11-10 13:30 file1*
+
+./d:
+total 0
+-rwxrwxrwx 1 konstantin konstantin 8 2020-11-10 13:31 file2*
+</code></pre>
+
+        
+        <p>
             Наш репозиторий никак не изменился.
         </p>
 
         <pre><code style="color: blue">
 $ ls -l .git
-total 7
--rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
--rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
--rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 objects/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
+total 0
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
+-rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
+-rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
+-rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 objects/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
 </code></pre>
         
         <p>
@@ -188,7 +215,7 @@ nothing added to commit but untracked files present (use "git add" to track)
         </p>
             
         <pre><code style="color: #0000ff">
-$ git add git add file1 d/file2
+$ git add file1 d/file2
 </code></pre>
 
         <p>
@@ -215,15 +242,16 @@ Changes to be committed:
         
         <pre><code style="color: blue">
 $ ls -l .git
-total 8
--rw-r--r-- 1 Konstantin 197121  23 Nov  9 19:27 HEAD
--rw-r--r-- 1 Konstantin 197121 130 Nov  9 19:27 config
--rw-r--r-- 1 Konstantin 197121  73 Nov  9 19:27 description
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 hooks/
--rw-r--r-- 1 Konstantin 197121 176 Nov  9 20:53 index
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 info/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 20:53 objects/
-drwxr-xr-x 1 Konstantin 197121   0 Nov  9 19:27 refs/
+total 0
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
+-rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
+-rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
+-rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
+-rwxrwxrwx 1 konstantin konstantin 176 2020-11-10 13:39 index*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:39 objects/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
 </code></pre>
         <p>
             В каталоге <i>.git</i> команда  <i>git add</i> создала файл <i>index</i>, а в  каталоге <i>.git/objects</i> - подкаталоги с файлами.
@@ -348,10 +376,55 @@ $ git status
 On branch master
 nothing to commit, working tree clean
 </code></pre>
-        Снова видим что «фиксировать нечего (nothing to commit)»
-        и что «рабочий каталог чист (working tree clean)»
+
+        <p>
+            Снова видим что «фиксировать нечего (nothing to commit)»
+            и что «рабочий каталог чист (working tree clean)»
+        </p>
+            
+        <p>        
+            Посмотрим как операция <i>git add</i> отразилась на файлах репозитория <i>.git</i>.
+        </p>
+            
+            
+        <pre><code style="color: blue">
+$ ls -l .git/
+total 0
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
+-rwxrwxrwx 1 konstantin konstantin  11 2020-11-10 13:44 COMMIT_EDITMSG*
+-rwxrwxrwx 1 konstantin konstantin 163 2020-11-10 13:44 config*
+-rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
+-rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
+-rwxrwxrwx 1 konstantin konstantin 235 2020-11-10 13:44 index*
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:44 logs/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:44 objects/
+drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
+</code></pre>
+
+        <p>
+            В каталоге <i>.git/objects</i> появились новые объекты.
+        </p>
+            
+        <pre><code style="color: blue">
+$ find .git/objects -type f
+.git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
+.git/objects/69/701b6e701d429882c083e98e1ecf195868b38c
+.git/objects/6c/59b709d4abf607ab16a03b22db93412fe437a4
+.git/objects/96/6e9a46c8df9aa3b2108864be07abe7b5d1d0f9
+.git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
+</code></pre>
+
+        <p>
+            $$$$$$$$$.
+        </p>
+            
+            
         <p>
             Создадим в рабочем каталоге еще один файл
+        </p>
+            
         <pre><code style="color: blue">
 $ echo -n "File3 v1" > file3
 
