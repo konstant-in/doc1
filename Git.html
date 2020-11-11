@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <TITLE>Git не для чайников</TITLE>
+        <TITLE>Git не для чайников (часть 1)</TITLE>
     </head>
 <BODY>
     <div style="width:85%;  margin: auto;">
@@ -88,7 +88,7 @@ $ mkdir ~/project1
 $ cd ~/project1
    
 $ git init -b master
-Initialized empty Git repository in .git/
+Инициализирован пустой репозиторий Git в /home/konstantin/project1/.git/
 </code></pre>
         
         <p>
@@ -101,16 +101,16 @@ Initialized empty Git repository in .git/
             Посмотрим что находится в этом каталоге.
         </p>
         <pre><code style="color: blue">
-$ ls -l .git
-total 0
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
--rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
--rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
--rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 objects/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
+$ ls -l .git/
+итого 0
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 branches/
+-rw-r--r-- 1 konstantin konstantin  92 2020-11-11 08:41 config
+-rw-r--r-- 1 konstantin konstantin  73 2020-11-11 08:41 description
+-rw-r--r-- 1 konstantin konstantin  23 2020-11-11 08:41 HEAD
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 hooks/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 info/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 objects/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 refs/
 </code></pre>
 
         <p>
@@ -132,11 +132,11 @@ $ find .git/objects -type f
         </p>
         <pre><code style="color: blue">
 $ git status
-On branch master
+На ветке master
 
-No commits yet
+Еще нет коммитов
 
-nothing to commit (create/copy files and use "git add" to track)
+нечего коммитить (создайте/скопируйте файлы, затем запустите «git add», чтобы отслеживать их)
 </code></pre>
         Создадим в рабочем каталоге два файла (один в его корне, другой в подкаталоге d).
         <pre><code style="color: blue">
@@ -155,13 +155,13 @@ $ echo -n "File2 v1" > d/file2
         <pre><code style="color: blue">
 $ ls -lR
 .:
-total 0
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:31 d/
--rwxrwxrwx 1 konstantin konstantin   8 2020-11-10 13:30 file1*
+итого 0
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:46 d/
+-rw-r--r-- 1 konstantin konstantin   8 2020-11-11 08:46 file1
 
 ./d:
-total 0
--rwxrwxrwx 1 konstantin konstantin 8 2020-11-10 13:31 file2*
+итого 0
+-rw-r--r-- 1 konstantin konstantin 8 2020-11-11 08:46 file2
 </code></pre>
 
         
@@ -170,16 +170,16 @@ total 0
         </p>
 
         <pre><code style="color: blue">
-$ ls -l .git
-total 0
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
--rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
--rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
--rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 objects/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
+ ls -l .git
+итого 0
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 branches/
+-rw-r--r-- 1 konstantin konstantin  92 2020-11-11 08:41 config
+-rw-r--r-- 1 konstantin konstantin  73 2020-11-11 08:41 description
+-rw-r--r-- 1 konstantin konstantin  23 2020-11-11 08:41 HEAD
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 hooks/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 info/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 objects/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 refs/
 </code></pre>
         
         <p>
@@ -188,17 +188,16 @@ drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
             
         <pre><code style="color: blue">
 $ git status
-On branch master
+На ветке master
 
-No commits yet
+Еще нет коммитов
 
-Untracked files:
-  (use "git add &lt;file&gt;..." to include in what will be committed)
-
+Неотслеживаемые файлы:
+  (используйте «git add <файл>…», чтобы добавить в то, что будет включено в коммит)
         d/
         file1
 
-nothing added to commit but untracked files present (use "git add" to track)
+ничего не добавлено в коммит, но есть неотслеживаемые файлы (используйте «git add», чтобы отслеживать их)
 </code></pre>
         
         <p>
@@ -209,8 +208,11 @@ nothing added to commit but untracked files present (use "git add" to track)
 
         <p>
             Git хранит историю не всех файлов рабочего каталога.
+            <br>
             Чтобы начать хранить историю версий какого-либо файла надо отдать его под версионный контроль.
+            <br>
             Файлы отданные под версионный контроль называются <i>отслеживаемыми</i>.
+            <br>
             Чтобы сделать файл или группу файлов отслеживаемыми, надо выполнить команду <i>git add</i>, передав ей в качестве параметров имена этих файлов.
         </p>
             
@@ -224,15 +226,14 @@ $ git add file1 d/file2
 
         <pre><code style="color: #0000ff">
 $ git status
-On branch master
+На ветке master
 
-No commits yet
+Еще нет коммитов
 
-Changes to be committed:
-  (use "git rm --cached &lt;file&gt;..." to unstage)
-
-        new file:   d/file2
-        new file:   file1
+Изменения, которые будут включены в коммит:
+  (используйте «git rm --cached <файл>…», чтобы убрать из индекса)
+        новый файл:    d/file2
+        новый файл:    file1
 </code></pre>
         
         
@@ -242,19 +243,23 @@ Changes to be committed:
         
         <pre><code style="color: blue">
 $ ls -l .git
-total 0
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
--rwxrwxrwx 1 konstantin konstantin 112 2020-11-10 13:18 config*
--rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
--rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
--rwxrwxrwx 1 konstantin konstantin 176 2020-11-10 13:39 index*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:39 objects/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
+итого 0
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 branches/
+-rw-r--r-- 1 konstantin konstantin  92 2020-11-11 08:41 config
+-rw-r--r-- 1 konstantin konstantin  73 2020-11-11 08:41 description
+-rw-r--r-- 1 konstantin konstantin  23 2020-11-11 08:41 HEAD
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 hooks/
+-rw-r--r-- 1 konstantin konstantin 176 2020-11-11 08:49 index
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 info/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:49 objects/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 refs/
 </code></pre>
         <p>
-            В каталоге <i>.git</i> команда  <i>git add</i> создала файл <i>index</i>, а в  каталоге <i>.git/objects</i> - подкаталоги с файлами.
+            В каталоге <i>.git</i> команда  <i>git add</i> создала файл <i>index</i>, а в каталоге <i>.git/objects</i>
+            <br>
+            подкаталог с именем <i>47</i> и файлом <i>5190118d49d9905c1a82c6fd11dab9ab602cc4</i> и
+            <br>
+            подкаталог с именем <i>b2</i> с файлом <i>fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
         </p>
             
         <pre><code style="color: blue">
@@ -262,21 +267,13 @@ $ find .git/objects -type f
 .git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
 .git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
 </code></pre>
-
-        <p>
-            В каталоге <i>.git/objects</i> созданы
-            <br>
-            каталог <i>47</i> с файлом <i>5190118d49d9905c1a82c6fd11dab9ab602cc4</i>
-            <br>
-            и
-            <br>
-            каталог <i>b2</i> с файлом <i>fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
-        </p>
+        
+        <h4>О содержимом каталога <i>.git/objects</i></h4>
             
         <p>
-            Все файлы образующиеся в процессе работы в каталоге <i>.git/objects/</i> называются <i>объектами</i>, а сам каталог - <i>базой объектов</i>.
+            Все файлы образующиеся в подкаталогах <i>xx</i> каталога <i>.git/objects/</i> являются <i>объектами</i> git, а сам каталог - <i>базой объектов</i>.
             <br>
-            Все объекты имеют идентификаторы являющиеся 40- разрядными шестнадцатиричными числами.
+            Каждый объект имеет <i>идентификатор</i>, представляющий из себя 40-разрядное шестнадцатиричное число.
             <br>
             Имя подкаталога в котором сохраняется объект образовано первыми двуми символов идентификатора объекта.
             Имя файла образовано оставшихся 38 символами идентификатора.
@@ -286,7 +283,11 @@ $ find .git/objects -type f
             Т.о. в каталоге <i>.git/objects/</i> каманда <i>git add</i> создала два объекта с идентификаторами <i>475190118d49d9905c1a82c6fd11dab9ab602cc4</i> и <i>b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f</i>.
         </p>
         <p>
-            В объектах, создаваемых камандой <i>git add</i>, хранятся в упакованном виде ...
+            В объектах, создаваемых камандой <i>git add</i>, в упакованном виде хранятся содержимое добавленных файлов (на момент выполнения команды) и некоторая служебная информация.
+            <br>
+            Идентификатор объекта - это значение SHA-1 хеш-функции от содержимого файла и служебной информации.
+            <br>
+            Частью служебной информации является слово <i>blob</i> (от Binary Large Object) - тип объекта, создаваемый командой <i>git add</i>.
         </p>
         
         <pre><code style="color: blue">
@@ -304,6 +305,42 @@ File2 v1
 </code></pre>
         
         
+        <h4>О файле <i>.git/index</i></h4>
+
+        <p>
+            Файле <i>.git/index</i> в у упакованном виде хранит информацию о состоянии рабочего каталога.
+            Часть этой информации можно посмотреть командой <i>git ls-files --stage -t</i>.
+        </p>
+
+        <pre><code style="color: blue">
+$ git ls-files --stage -t
+H 100644 b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f 0     d/file2
+H 100644 475190118d49d9905c1a82c6fd11dab9ab602cc4 0     file1
+</code></pre>
+
+        <p>
+            Другую часть командой <i>git ls-files --debug</i>.
+        </p>
+
+        <pre><code style="color: blue">
+$ git ls-files --debug
+d/file2
+  ctime: 1605077201:623935900
+  mtime: 1605077201:623935900
+  dev: 2        ino: 159593
+  uid: 1000     gid: 1000
+  size: 8       flags: 0
+file1
+  ctime: 1605077174:167040200
+  mtime: 1605077174:167040200
+  dev: 2        ino: 159569
+  uid: 1000     gid: 1000
+  size: 8       flags: 0
+</code></pre>
+
+        <p>
+            Есть в нем что-то ещё????.
+        </p>
         
         <h3>Фиксация состояний репозитория. Команда <i>git commit</i></h3>
 
@@ -312,7 +349,7 @@ File2 v1
             Фиксация выполняется командой <i>git commit</i>.
         </p>
         <p>
-            Сохраняет ...
+            Сохраняет ... $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         </p>
         <p>
             В разных проектах с разными репозиториями можно работать под разными именами.
@@ -325,7 +362,19 @@ $ git config user.email "ivan@localhost"
             Команда <i>git config</i> без параметра <i>--global</i> заносит имя, фамилию и почту в локальный конфигурационный файл,
             относящийся только к этому репозиторию.
         </p>
-        
+
+        <pre><code style="color: blue">
+$ cat .git/config
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        bare = false
+        logallrefupdates = true
+[user]
+        name = Ivan Ivanov
+        email = ivan@localhost
+</code></pre>
+
         
         
         <p>В учебных примерах мы всякий раз, перед выполнением команды <i>git commit</i>,
@@ -345,7 +394,7 @@ $ export GIT_AUTHOR_DATE="2000-01-01 00:01"
 $ export GIT_COMMITTER_DATE="2000-01-01 00:01"
 
 $ git commit -m "comment #1"
-[master (root-commit) 69701b6] comment #1
+[master (корневой коммит) 69701b6] comment #1
  2 files changed, 2 insertions(+)
  create mode 100644 d/file2
  create mode 100644 file1
@@ -359,7 +408,7 @@ $ git commit -m "comment #1"
         <pre><code style="color: blue">
 $ git log
 commit 69701b6e701d429882c083e98e1ecf195868b38c (HEAD -> master)
-Author: Ivan Ivanov &lt;ivan@localhost&gt;
+Author: Ivan Ivanov <ivan@localhost>
 Date:   Sat Jan 1 00:01:00 2000 +0200
 
     comment #1
@@ -373,14 +422,9 @@ Date:   Sat Jan 1 00:01:00 2000 +0200
         <p>Посмотрим текущее состояние репозитория.</p>
         <pre><code style="color: blue">
 $ git status
-On branch master
-nothing to commit, working tree clean
+На ветке master
+нечего коммитить, нет изменений в рабочем каталоге
 </code></pre>
-
-        <p>
-            Снова видим что «фиксировать нечего (nothing to commit)»
-            и что «рабочий каталог чист (working tree clean)»
-        </p>
             
         <p>        
             Посмотрим как операция <i>git add</i> отразилась на файлах репозитория <i>.git</i>.
@@ -389,36 +433,136 @@ nothing to commit, working tree clean
             
         <pre><code style="color: blue">
 $ ls -l .git/
-total 0
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 branches/
--rwxrwxrwx 1 konstantin konstantin  11 2020-11-10 13:44 COMMIT_EDITMSG*
--rwxrwxrwx 1 konstantin konstantin 163 2020-11-10 13:44 config*
--rwxrwxrwx 1 konstantin konstantin  73 2020-11-10 13:18 description*
--rwxrwxrwx 1 konstantin konstantin  23 2020-11-10 13:18 HEAD*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 hooks/
--rwxrwxrwx 1 konstantin konstantin 235 2020-11-10 13:44 index*
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 info/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:44 logs/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:44 objects/
-drwxrwxrwx 1 konstantin konstantin 512 2020-11-10 13:18 refs/
+итого 0
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 branches/
+-rw-r--r-- 1 konstantin konstantin  11 2020-11-11 09:44 COMMIT_EDITMSG <span style="color: red"># новый файл</span>
+-rw-r--r-- 1 konstantin konstantin 143 2020-11-11 09:43 config
+-rw-r--r-- 1 konstantin konstantin  73 2020-11-11 08:41 description
+-rw-r--r-- 1 konstantin konstantin  23 2020-11-11 08:41 HEAD
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 hooks/
+-rw-r--r-- 1 konstantin konstantin 235 2020-11-11 09:44 index <span style="color: red"># изменились размер и время модификации</span>
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 info/
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 09:44 logs/ <span style="color: red"># изменилось время и содержимое каталога (его содержимым пока интересоваться не будем)</span>
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 09:44 objects/ <span style="color: red"># изменилось время и содержимое каталога</span>
+drwxr-xr-x 1 konstantin konstantin 512 2020-11-11 08:41 refs/
 </code></pre>
 
         <p>
-            В каталоге <i>.git/objects</i> появились новые объекты.
+            1) В каталоге <i>.git/objects</i> появились новые объекты.
         </p>
             
         <pre><code style="color: blue">
 $ find .git/objects -type f
 .git/objects/47/5190118d49d9905c1a82c6fd11dab9ab602cc4
-.git/objects/69/701b6e701d429882c083e98e1ecf195868b38c
-.git/objects/6c/59b709d4abf607ab16a03b22db93412fe437a4
-.git/objects/96/6e9a46c8df9aa3b2108864be07abe7b5d1d0f9
+.git/objects/69/701b6e701d429882c083e98e1ecf195868b38c <span style="color: red"># новый объект</span>
+.git/objects/6c/59b709d4abf607ab16a03b22db93412fe437a4 <span style="color: red"># новый объект</span>
+.git/objects/96/6e9a46c8df9aa3b2108864be07abe7b5d1d0f9 <span style="color: red"># новый объект</span>
 .git/objects/b2/fb6cc242d8ca8d2623b8deb4a1a17349af6f2f
 </code></pre>
 
         <p>
+            Пасмотрим их типы и содержимое:
+        </p>
+
+        <pre><code style="color: blue">
+$ git cat-file -t 6970
+commit
+
+$ git cat-file -t 6c59
+tree
+
+$ git cat-file -t 966e
+tree
+
+$ git cat-file -p 6970
+tree 6c59b709d4abf607ab16a03b22db93412fe437a4
+author Ivan Ivanov <ivan@localhost> 946677660 +0200
+committer Ivan Ivanov <ivan@localhost> 946677660 +0200
+
+comment #1
+
+$ git cat-file -p 6c59
+040000 tree 966e9a46c8df9aa3b2108864be07abe7b5d1d0f9    d
+100644 blob 475190118d49d9905c1a82c6fd11dab9ab602cc4    file1
+
+$ git cat-file -p 966e
+100644 blob b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f    file2
+</code></pre>
+
+        <p>
+            Видим два новых типа объектов: <i>comment</i> и <i>tree</i>.
+        </p>
+
+        <p>
+            Объект <i>comment</i> содержит ... .
+        </p>
+
+        <p>
+            Объект <i>tree</i> содержит ... .
+        </p>
+
+        <p>
             $$$$$$$$$.
         </p>
+
+        <p>
+            2) Изменилось время модификации файла <i>.git/index</i> и его размер.
+            Но информация выводимая командами <i>git ls-files --stage -t</i> и <i>git ls-files --debug не изменилась</i>.
+        </p>
+
+
+        <pre><code style="color: blue">
+$ git ls-files --stage -t
+H 100644 b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f 0     d/file2
+H 100644 475190118d49d9905c1a82c6fd11dab9ab602cc4 0     file1
+
+$ git ls-files --debug
+d/file2
+  ctime: 1605077201:623935900
+  mtime: 1605077201:623935900
+  dev: 2        ino: 159593
+  uid: 1000     gid: 1000
+  size: 8       flags: 0
+file1
+  ctime: 1605077174:167040200
+  mtime: 1605077174:167040200
+  dev: 2        ino: 159569
+  uid: 1000     gid: 1000
+  size: 8       flags: 0
+</code></pre>
+
+        <p>
+            Что-то индекс хранит ещё!!!!.
+        </p>
+
+        <p>
+            3) Появился новый файл <i>.git/COMMIT_EDITMSG</i>, содержащий текст комментария к коммиту.
+        </p>
+
+        <pre><code style="color: blue">
+$ cat .git/COMMIT_EDITMSG
+comment #1
+</code></pre>
+
+        <p>
+            4) В каталоге <i>.git/refs/heads/</i> появился новый файл <i>master</i>.
+        </p>
+
+        <p>
+            Этот файл и все другие файлы, которые будут появляться в каталоге <i>.git/refs/heads/</i>, являются <i>указателями</i>.
+            Они будут хранить <i>id</i> некоторых коммитов.
+        </p>
+
+        <p>
+            Файл <i>.git/refs/heads/master</i> содержит <i>id</i> только что созданного нами и пока единственного коммита.
+            <br>
+            Имя <i>master</i>, это то имя начальной ветки, которое мы указывали при инициализации репозитория (или имя по умолчанию).
+        </p>
+
+        <pre><code style="color: blue">
+$ cat .git/refs/heads/master
+69701b6e701d429882c083e98e1ecf195868b38c
+</code></pre>
             
             
         <p>
@@ -427,25 +571,36 @@ $ find .git/objects -type f
             
         <pre><code style="color: blue">
 $ echo -n "File3 v1" > file3
+</code></pre>
+            
+        <p>
+            Посмотрим новый статус рабочего каталога.
+        </p>
 
+            
+        <pre><code style="color: blue">
 $ git status
-On branch master
-Untracked files:
-  (use "git add &lt;file&gt;..." to include in what will be committed)
-
+На ветке master
+Неотслеживаемые файлы:
+  (используйте «git add <файл>…», чтобы добавить в то, что будет включено в коммит)
         file3
 
-nothing added to commit but untracked files present (use "git add" to track)
+ничего не добавлено в коммит, но есть неотслеживаемые файлы (используйте «git add», чтобы отслеживать их)
 </code></pre>
         <p>
-            Под заголовком «Untracked files:» команда вывела добавленный нами файл file3. Он пока неотслеживаемый. Если попробовать зафиксировать новое состояние репозитория, то ничего не произойдет.
+            Под заголовком «Неотслеживаемые файлы (Untracked files)» команда вывела добавленный нами файл file3.
+            <br>
+            Он пока неотслеживаемый.
+            <br>
+            Если попробовать зафиксировать новое состояние репозитория, то ничего не произойдет.
         <pre><code style="color: blue">
 $ git commit -m "comment #2"
-On branch master
-Untracked files:
+На ветке master
+Неотслеживаемые файлы:
+  (используйте «git add <файл>…», чтобы добавить в то, что будет включено в коммит)
         file3
 
-nothing added to commit but untracked files present
+ничего не добавлено в коммит, но есть неотслеживаемые файлы (используйте «git add», чтобы отслеживать их)
 </code></pre>
         <p>
             Сделаем файл file3 отслеживаемым и посмотрим на новый статус репозитория
@@ -453,13 +608,12 @@ nothing added to commit but untracked files present
 $ git add file3
 
 $ git status
-On branch master
-Changes to be committed:
-  (use "git reset HEAD &lt;file&gt;..." to unstage)
-
-        new file:   file3
+На ветке master
+Изменения, которые будут включены в коммит:
+  (use "git restore --staged <file>..." to unstage)
+        новый файл:    file3
 </code></pre>
-        Команда вывела файл file3 уже под заголовком «Changes to be committed:». Сейчас файл file3 подготовлен (stage) для фиксации.
+        Команда вывела файл file3 уже под заголовком «Изменения, которые будут включены в коммит (Changes to be committed)». Сейчас файл file3 подготовлен (stage) для фиксации.
         <p>Выполним фиксацию
         <pre><code style="color: blue">
 $ export GIT_AUTHOR_DATE="2000-01-01 00:02"
@@ -499,27 +653,28 @@ nothing to commit, working tree clean
 $ echo -ne "\nSecond line (v2)" >> file1
 
 $ git status
-On branch master
-Changes not staged for commit:
-  (use "git add &lt;file&gt;..." to update what will be committed)
-  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+На ветке master
+Изменения, которые не в индексе для коммита:
+  (используйте «git add <файл>…», чтобы добавить файл в индекс)
+  (use "git restore <file>..." to discard changes in working directory)
+        изменено:      file1
 
-        modified:   file1
-
-no changes added to commit (use "git add" and/or "git commit -a")
+нет изменений добавленных для коммита
+(используйте «git add» и/или «git commit -a»)
 </code></pre>
-        Файл file1 выведен уже под заголовком «Changes not staged for commit:». Он модифицирован (Modified). Модифицированные файла, как и новые, перед фиксацией тоже надо подготовить.
+        Файл file1 выведен уже под заголовком «Изменения, которые не в индексе для коммита (Changes not staged for commit)». Он модифицирован (Modified).
+        <br>
+            Модифицированные файла, как и новые, перед фиксацией тоже надо подготовить.
         <p>
             Подготовим для фиксации новую версию файла file1.
         <pre><code style="color: blue">
 $ git add file1
 
 $ git status
-On branch master
-Changes to be committed:
-  (use "git reset HEAD &lt;file&gt;..." to unstage)
-
-        modified:   file1
+На ветке master
+Изменения, которые будут включены в коммит:
+  (use "git restore --staged <file>..." to unstage)
+        изменено:      file1
 </code></pre>
         Замечание: Команда git add не только добавляет под версионный контроль новые файлы, но и помечаются измененные файлы, которые готовы для фиксации.
         <br>
@@ -563,9 +718,8 @@ Date:   Sat Jan 1 00:01:00 2000 +0200
 
         <pre><code style="color: blue">
 $ git status
-On branch master
-nothing to commit, working tree clean
-
+На ветке master
+нечего коммитить, нет изменений в рабочем каталоге
 </code></pre>
 
         <p>И снова у нас «чистый директорий».</p>
@@ -589,27 +743,32 @@ $ git log --pretty=format:'%h %ad - %s%d [%an]' --graph --date=format:'%Y-%m-%d 
 
         <pre><code style="color: blue">
 $ git checkout 03c1
-Note: checking out '03c1'.
+Note: switching to '03c1'.
 
 You are in 'detached HEAD' state. You can look around, make experimental
 changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by performing another checkout.
+state without impacting any branches by switching back to a branch.
 
 If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -b with the checkout command again. Example:
+do so (now or later) by using -c with the switch command. Example:
 
-  git checkout -b &lt;new-branch-name&gt;
+  git switch -c <new-branch-name>
 
-HEAD is now at 03c1a7f comment #2
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD сейчас на 03c1a7f comment #2
 </code></pre>
         <p>Проверьте состояние рабочего каталога. [проверить содеримое каталогов и файлов...]</p>
 
-        <p>Вернемся на состояние зафиксированное последним коммитом (с <i>id</i> равным <i>344b36ba2aeb489f97a4928816eeeefb30ddfac2</i>) (comment #3).</p>
+        <p>Вернемся на состояние зафиксированное последним коммитом (на коммит на который указывает указатель <i>master</i>).</p>
         <pre><code style="color: blue">
-$ git checkout 344b
-Previous HEAD position was 03c1a7f comment #2
-HEAD is now at 344b36b comment #3
-
+$ git checkout master
+Предыдущая позиция HEAD была 03c1a7f comment #2
+Переключено на ветку «master»
 </code></pre>
 
         <h2>Внутреннее устройство git</h2>
@@ -792,7 +951,8 @@ total 8
 -rw-r--r-- 1 Konstantin 197121 181 июл 14 11:28 config
 -rw-r--r-- 1 Konstantin 197121  73 июл 14 11:28 description
 -rw-r--r-- 1 Konstantin 197121  23 июл 14 11:28 HEAD
-drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/-rw-r--r-- 1 Konstantin 197121 176 июл 14 15:12 index <span style="color: red"># было: 104 июл 14 12:39</span>
+drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 hooks/
+-rw-r--r-- 1 Konstantin 197121 176 июл 14 15:12 index <span style="color: red"># было: 104 июл 14 12:39</span>
 drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 info/
 drwxr-xr-x 1 Konstantin 197121   0 июл 14 15:12 objects/
 drwxr-xr-x 1 Konstantin 197121   0 июл 14 11:28 refs/
@@ -967,9 +1127,9 @@ $ git cat-file -p 966e
         <p>
             Мы имеем первый снимок нашей системы
         <pre><code style="color: blue">
-6c59 ---+--&gt; 4751 (файл «file1»)
-        |
-        +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+6c59 (раб.катал.) ---+--&gt; 4751 (файл «file1»)
+                     |
+                     +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 </code></pre>
         <p>
             Что следует из того, что идентификаторы блобов, деревьев, как и всех остальных объектов, являются хешем их содержимого?
@@ -1215,11 +1375,11 @@ comment #2
         <p>
             Новый снимок системы
         <pre><code style="color: blue">
-2763 ---+--&gt; 4751 (файл «file1»)
-        |
-        +--&gt; ad2a (файл «file3»)
-        |
-        +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+2763 (раб.катал.) ---+--&gt; 4751 (файл «file1»)
+                     |
+                     +--&gt; ad2a (файл «file3»)
+                     |
+                     +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 </code></pre>
         <p>
             Изменим содержимое файла file3, добавив еще одну строку
@@ -1297,29 +1457,29 @@ $ git cat-file -p b892
         <p>
             Вот новый снимок системы
         <pre><code style="color: blue">
-b892 ---+--&gt; 1d52 (файл «file1» v2)
-        |
-        +--&gt; ad2a (файл «file3»)
-        |
-        +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+b892 (раб.катал.) ---+--&gt; 1d52 (файл «file1» v2)
+                     |
+                     +--&gt; ad2a (файл «file3»)
+                     |
+                     +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 </code></pre>
         А так выгладит вся история нашего репозитория.
         <pre><code style="color: blue">
-6970 (commit #1) --&gt; 6c59 ---+--&gt; 4751 (файл «file1»)
-|                            |
-|                            +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+6970 (commit #1) --&gt; 6c59 (раб.катал.) ---+--&gt; 4751 (файл «file1»)
+|                                         |
+|                                         +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 ↓
-03c1 (commit #2) --&gt; 2763 ---+--&gt; 4751 (файл «file1»)
-|                            |
-|                            +--&gt; ad2a (файл «file3»)
-|                            |
-|                            +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+03c1 (commit #2) --&gt; 2763 (раб.катал.) ---+--&gt; 4751 (файл «file1»)
+|                                         |
+|                                         +--&gt; ad2a (файл «file3»)
+|                                         |
+|                                         +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 ↓
-344b (commit #3) --&gt; b892 ---+--&gt; 1d52 (файл «file1» v2)
-                             |
-                             +--&gt; ad2a (файл «file3»)
-                             |
-                             +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
+344b (commit #3) --&gt; b892 (раб.катал.) ---+--&gt; 1d52 (файл «file1» v2)
+                                          |
+                                          +--&gt; ad2a (файл «file3»)
+                                          |
+                                          +--&gt; 966e (каталог «d») --&gt; 4751 (файл «file2»)
 </code></pre>
         <p>
             Таже история в обратной хронологической последовательности и без подробностей
