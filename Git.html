@@ -88,7 +88,7 @@ $ mkdir ~/project1
 $ cd ~/project1
    
 $ git init -b master
-Инициализирован пустой репозиторий Git в /home/konstantin/project1/.git/
+Инициализирован пустой репозиторий Git в ~/project1/.git/
 </code></pre>
         
         <p>
@@ -468,12 +468,6 @@ $ find .git/objects -type f
 $ git cat-file -t 6970
 commit
 
-$ git cat-file -t 6c59
-tree
-
-$ git cat-file -t 966e
-tree
-
 $ git cat-file -p 6970
 tree 6c59b709d4abf607ab16a03b22db93412fe437a4
 author Ivan Ivanov <ivan@localhost> 946677660 +0200
@@ -481,9 +475,15 @@ committer Ivan Ivanov <ivan@localhost> 946677660 +0200
 
 comment #1
 
+$ git cat-file -t 6c59
+tree
+
 $ git cat-file -p 6c59
 040000 tree 966e9a46c8df9aa3b2108864be07abe7b5d1d0f9    d
 100644 blob 475190118d49d9905c1a82c6fd11dab9ab602cc4    file1
+
+$ git cat-file -t 966e
+tree
 
 $ git cat-file -p 966e
 100644 blob b2fb6cc242d8ca8d2623b8deb4a1a17349af6f2f    file2
@@ -494,8 +494,18 @@ $ git cat-file -p 966e
         </p>
 
         <p>
-            Объект <i>comment</i> содержит ... .
+            Объект <i>comment</i> хранит информацию, которую можно увидеть командой <i>git log</i> со следующими дополнительными параметрами:
         </p>
+
+        <pre><code style="color: blue">
+$ git log --pretty=format:'commit:    %H%d %ntree:      %T %nparent:    %P %nauthor:    %an %ae %ad %ncommitter: %cn %ce %cd %nsubject:   %s%n' --date=iso
+commit:    69701b6e701d429882c083e98e1ecf195868b38c (HEAD -> master)
+tree:      6c59b709d4abf607ab16a03b22db93412fe437a4
+parent:
+author:    Ivan Ivanov ivan@localhost 2000-01-01 00:01:00 +0200
+committer: Ivan Ivanov ivan@localhost 2000-01-01 00:01:00 +0200
+subject:   comment #1
+</code></pre>
 
         <p>
             Объект <i>tree</i> содержит ... .
